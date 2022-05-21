@@ -64,3 +64,23 @@ result should be like this:
 }
 
 -------------------------------------------------------------------------------------
+COMPARING (using bcrypt)
+
+authorsSchema.statics.checkCredentials = async function (email, plainPass) {
+
+}
+
+1.  .static.customMethod() let us define some custom methods attached to the authorsModel
+
+2. in the "statics", "this" keyword represents the authorsModel itself
+
+step by step of comparing:
+1. search if email exists in our DB
+2. If email existss, we need to check the password (using bcrypt.compare)
+3.if everything is fine, we will return the author himself
+4. if password is not correct we will return NULL
+if email is not correct we will return NULL too
+
+why NULL ? if none of them is correct we dont want to give a hint (to potential password breaker), just return nothing
+
+-------------------------------------------------------------------------------------

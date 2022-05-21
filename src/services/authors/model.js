@@ -56,7 +56,27 @@ authorsSchema.methods.toJSON = function () {
 
 //*******************************     COMPARING      *****************************//
 
+authorsSchema.statics.checkCredentials = async function (email, plainPass) {
+  const author = await this.findOne({email})
 
+  if (author) {
+    const isMatch = await bcrypt.compare(plainPass, author.password)
+
+    if (isMatch) {
+      return author
+    } else {
+      return null //password INCORRECT
+    }
+  } else {
+    return null //email INCORRECT
+  }
+
+}
+
+
+
+// usage = await authorsModel.checkCredentials("john@doe.com", "1234password")
+// authorsModel.findOne()  is the same as  this.findOne() --> in the "statics", "this" keyword represents the authorsModel itself
 
 
 export default model("Author", authorsSchema) // this is going to be connected to the users collection
