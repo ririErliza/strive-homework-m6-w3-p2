@@ -114,3 +114,40 @@ Rookie mistake huh? :D :D :D :D
 that's fine, ERROR message is our FRIEND
 //
 -------------------------------------------------------------------------------------
+what error is this?
+
+an error that happened when the frontend part missing one (or two) properties (in this case, password property was missing)
+
+Incoming request --> POST -- Sat May 21 2022 17:29:36 GMT+0200 (Central European Summer Time)
+REQUEST BODY:  {
+  name: 'Assyla',
+  surname: 'Kmode',
+  email: 'kmodeReady@yahoo.com',
+  dateOfBirth: '2000-03-03'
+}
+ReferenceError: mongoose is not defined
+    at notFoundHandler (file:///C:/Users/erliz/OneDrive/Desktop/Homework/Back-end/strive-homework-m6-w3-p2/strive-homework-m6-w3-p2/src/errorsHandlers.js:31:44)
+    at Layer.handle_error (C:\Users\erliz\OneDrive\Desktop\Homework\Back-end\strive-homework-m6-w3-p2\strive-homework-m6-w3-p2\node_modules\express\lib\router\layer.js:71:5)     
+    at trim_prefix (C:\Users\erliz\OneDrive\Desktop\Homework\Back-end\strive-homework-m6-w3-p2\strive-homework-m6-w3-p2\node_modules\express\lib\router\index.js:326:13)
+    at C:\Users\erliz\OneDrive\Desktop\Homework\Back-end\strive-homework-m6-w3-p2\strive-homework-m6-w3-p2\node_modules\express\lib\router\index.js:286:9
+    at Function.process_params (C:\Users\erliz\OneDrive\Desktop\Homework\Back-end\strive-homework-m6-w3-p2\strive-homework-m6-w3-p2\node_modules\express\lib\router\index.js:346:12)
+    at next (C:\Users\erliz\OneDrive\Desktop\Homework\Back-end\strive-homework-m6-w3-p2\strive-homework-m6-w3-p2\node_modules\express\lib\router\index.js:280:10)
+    at forbiddenHandler (file:///C:/Users/erliz/OneDrive/Desktop/Homework/Back-end/strive-homework-m6-w3-p2/strive-homework-m6-w3-p2/src/errorsHandlers.js:26:5)
+    at Layer.handle_error (C:\Users\erliz\OneDrive\Desktop\Homework\Back-end\strive-homework-m6-w3-p2\strive-homework-m6-w3-p2\node_modules\express\lib\router\layer.js:71:5)     
+    at trim_prefix (C:\Users\erliz\OneDrive\Desktop\Homework\Back-end\strive-homework-m6-w3-p2\strive-homework-m6-w3-p2\node_modules\express\lib\router\index.js:326:13)
+    at C:\Users\erliz\OneDrive\Desktop\Homework\Back-end\strive-homework-m6-w3-p2\strive-homework-m6-w3-p2\node_modules\express\lib\router\index.js:286:9
+
+
+
+solved just by adding the correct property at frontend that match to the schema at backend
+
+Incoming request --> POST -- Sat May 21 2022 17:33:26 GMT+0200 (Central European Summer Time)
+REQUEST BODY:  {
+  name: 'Kayla',
+  surname: 'Mikona',
+  email: 'kayla@yahoo.com',
+  dateOfBirth: '1978-04-03',
+  password: 'kayla12345'
+}
+
+-------------------------------------------------------------------------------------
