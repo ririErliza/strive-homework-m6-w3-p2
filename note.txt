@@ -1,0 +1,66 @@
+why using function() not arrow function?
+
+authorsSchema.pre("save",function(next){
+  
+})
+
+because we want to use "this"
+
+authorsSchema.pre("save",function(next){
+  const newAuthor = this
+})
+
+-----------------------------------------------------------------------------
+
+check at POSTMAN after hashing password, 
+
+what we enter at POST method:
+
+{"name": "Johny",
+"surname": "Ughway",
+"email": "ughway234@yahoo.com",
+"dateOfBirth": "1989-1-1",
+"password": "random1234"          
+}
+
+result should be like this:
+{
+    "name": "Johny",
+    "surname": "Ughway",
+    "email": "ughway234@yahoo.com",
+    "dateOfBirth": "1989-1-1",
+
+    "password": "$2b$09$3xfX9RVrkksy5vSqMLJHiuoxvdkqDvgX/iPE0Szj0nPFcTQKXIQye",
+
+    "_id": "6288decf81d8f7e5b8c81527",
+    "createdAt": "2022-05-21T12:45:03.673Z",
+    "updatedAt": "2022-05-21T12:45:03.673Z",
+    "__v": 0
+}
+
+-------------------------------------------------------------------------------------
+check at POSTMAN after delete password from response result, 
+
+what we enter at POST method:
+{"name": "Kaleea",
+"surname": "Ughway",
+"email": "kaleUughway234@yahoo.com",
+"dateOfBirth": "1990-1-4",
+"password": "kalekale456"
+           
+}
+
+result should be like this:
+
+{
+    "name": "Kaleea",
+    "surname": "Ughway",
+    "email": "kaleUughway234@yahoo.com",
+    "dateOfBirth": "1990-1-4",
+    "_id": "6288e1130f5fa355e8050fa5",
+    "createdAt": "2022-05-21T12:54:43.900Z",
+    "updatedAt": "2022-05-21T12:54:43.900Z",
+    "__v": 0
+}
+
+-------------------------------------------------------------------------------------
