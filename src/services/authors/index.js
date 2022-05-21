@@ -15,7 +15,7 @@ import { cloudinaryUploader } from "../../lib/cloudinary.js";
 const authorsRouter = express.Router()
 
 //1.
-authorsRouter.post("/register", async (req,res)=>{
+authorsRouter.post("/register", async (req,res,next)=>{
 try {
     console.log("REQUEST BODY: ", req.body)
 
@@ -30,16 +30,27 @@ try {
    
 })
 
-authorsRouter.post("/login", async (req,res)=>{
+authorsRouter.post("/login", async (req,res,next)=>{
     try {
        //1. extraxt credentials from req.body
 
-       const {email,password}= req.body
+       const {email, password}= req.body
+
+
        //2. verify them using bcrypt.compare for the password
-       //3. if credentials are FINE, we will generate a TOKEN
-       //4. TOKEN is send as a RESPONSE
-    
-        
+
+       const author = await authorsModel.checkCredentials(email, password)
+
+       //3. if credentials are FINE, we will generate a TOKEN (if not, error 401)
+       if (author) {
+
+           //4. TOKEN is send as a RESPONSE
+           res.send({message:"Credentials are OK"})
+       } else {
+         next(createError(401, "Oops! Credentials are not OK"))  
+       }
+       
+     
     } catch (error) {
         next(error)
     }

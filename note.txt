@@ -1,15 +1,16 @@
 why using function() not arrow function?
 
 authorsSchema.pre("save",function(next){
-  
-})
-
-because we want to use "this"
-
-authorsSchema.pre("save",function(next){
   const newAuthor = this
 })
 
+because we want to use "this" keyword. it doesnt work with arrow function.
+
+Why this keyword does not work with arrow function?
+this in regular function always refers to the context of the function being called. 
+However, in the arrow function, this has nothing to do with the caller of the function. 
+It refers to the scope where the function (the enclosing context) is present. That's why we get undefined.
+(source https://www.section.io/engineering-education/how-to-use-javascript-arrow-functions-and-this-keyword/ )
 -----------------------------------------------------------------------------
 
 check at POSTMAN after hashing password, 
@@ -38,6 +39,7 @@ result should be like this:
     "__v": 0
 }
 
+see the password is already hashed at response
 -------------------------------------------------------------------------------------
 check at POSTMAN after delete password from response result, 
 
@@ -74,13 +76,41 @@ authorsSchema.statics.checkCredentials = async function (email, plainPass) {
 
 2. in the "statics", "this" keyword represents the authorsModel itself
 
-step by step of comparing:
-1. search if email exists in our DB
-2. If email existss, we need to check the password (using bcrypt.compare)
-3.if everything is fine, we will return the author himself
-4. if password is not correct we will return NULL
-if email is not correct we will return NULL too
+
+------- step by step of comparing:
+
+1.  search if email exists in our DB
+2.  If email exists, we need to check the password (using bcrypt.compare)
+3.  if everything is fine, we will return the author himself
+4.  if password is not correct we will return NULL
+    if email is not correct we will return NULL too
 
 why NULL ? if none of them is correct we dont want to give a hint (to potential password breaker), just return nothing
 
+-------------------------------------------------------------------------------------
+
+what error is this?
+happened when checking at POSTMAN when comparing the hashed password
+
+Incoming request --> POST -- Sat May 21 2022 15:56:23 GMT+0200 (Central European Summer Time)
+file:///C:/Users/erliz/OneDrive/Desktop/Homework/Back-end/strive-homework-m6-w3-p2/strive-homework-m6-w3-p2/src/services/authors/index.js:55
+        next(error)
+        ^
+
+ReferenceError: next is not defined
+    at file:///C:/Users/erliz/OneDrive/Desktop/Homework/Back-end/strive-homework-m6-w3-p2/strive-homework-m6-w3-p2/src/services/authors/index.js:55:9
+[nodemon] app crashed - waiting for file changes before starting...
+
+Cause found -> i forgot to type next here:
+authorsRouter.post("/register", async (req,res)=>{}
+authorsRouter.post("/login", async (req,res)=>{}
+
+Solve it just adding next:
+authorsRouter.post("/register", async (req,res,next)=>{}
+authorsRouter.post("/login", async (req,res,next)=>{}
+
+//
+Rookie mistake huh? :D :D :D :D
+that's fine, ERROR message is our FRIEND
+//
 -------------------------------------------------------------------------------------
