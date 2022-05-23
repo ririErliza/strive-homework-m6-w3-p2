@@ -7,9 +7,11 @@
 import express from "express";
 import authorsModel from "./model.js";
 import createError from "http-errors";
-import q2m from "query-to-mongo"
+import q2m from "query-to-mongo";
 import { cloudinaryUploader } from "../../lib/cloudinary.js";
-import {generateJWTToken} from "../../lib/auth/tools.js"
+import {generateJWTToken} from "../../lib/auth/tools.js";
+import { JWTAuthMiddleware } from "../../lib/auth/token.js";
+
 
 
 

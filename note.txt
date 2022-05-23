@@ -155,7 +155,7 @@ REQUEST BODY:  {
 //here, we want to generate a token and verify it (basically this is the process)
 jwt.sign(payload, process.env.JWT_SECRET,{expiresIn:"1 week"}, (err, token) =>{})  //template GENERATE token
 
-jwt.verify(token, process.env.JWT_SECRET,{expiresIn:"1 week"}, (err, payload) =>{}) //template VERIFY token
+jwt.verify(token, process.env.JWT_SECRET, (err, payload) =>{}) //template VERIFY token
 
 but wee need to convert functions above to promise function , because token generation can take sometimes
 
@@ -212,3 +212,78 @@ http://localhost:3002/authors/login
 solved: delete one of the double data in Mongo Compass
 -------------------------------------------------------------------------------------
 
+Attaches JWT on every request:
+
+1. go to POSTMAN
+2. copy the token that we get after log in (POST method)
+  http://localhost:3002/authors/login
+3. go to GET method with this endpoint http://localhost:3002/authors
+ 3.a. click Authorization, PASTE the token inside token already
+ 3.b. check at headers -> authorization, see the Bearer token already there
+ 3.c. click SEND
+
+-------------------------------------------------------------------------------------
+
+What error is this?
+
+forget to put .js when importing
+
+
+before:
+import { verifyJWTToken } from "./tools";
+
+after:
+import { verifyJWTToken } from "./tools.js";
+
+
+
+the error:
+
+node:internal/errors:464
+    ErrorCaptureStackTrace(err);
+    ^
+
+Error [ERR_MODULE_NOT_FOUND]: Cannot find module 'C:\Users\erliz\OneDrive\Desktop\Homework\Back-end\strive-homework-m6-w3-p2\strive-homework-m6-w3-p2\src\lib\auth\tools' imported from C:\Users\erliz\OneDrive\Desktop\Homework\Back-end\strive-homework-m6-w3-p2\strive-homework-m6-w3-p2\src\lib\auth\token.js
+    at new NodeError (node:internal/errors:371:5)
+    at finalizeResolution (node:internal/modules/esm/resolve:416:11)
+    at moduleResolve (node:internal/modules/esm/resolve:932:10)
+    at defaultResolve (node:internal/modules/esm/resolve:1044:11)
+    at ESMLoader.resolve (node:internal/modules/esm/loader:422:30)
+    at ESMLoader.getModuleJob (node:internal/modules/esm/loader:222:40)
+    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:76:40)
+    at link (node:internal/modules/esm/module_job:75:36) {
+  code: 'ERR_MODULE_NOT_FOUND'
+}
+[nodemon] app crashed - waiting for file changes before starting...
+
+
+
+
+
+-------------------------------------------------------------------------------------
+
+what error is this?
+
+error still occuring even after inputting the right email, password, and correct Bearer token.
+
+WHY??
+
+Incoming request --> GET -- Mon May 23 2022 12:27:06 GMT+0200 (Central European Summer Time)
+JsonWebTokenError: invalid token
+    at Object.module.exports [as verify] (C:\Users\erliz\OneDrive\Desktop\Homework\Back-end\strive-homework-m6-w3-p2\strive-homework-m6-w3-p2\node_modules\jsonwebtoken\verify.js:75:17)
+    at file:///C:/Users/erliz/OneDrive/Desktop/Homework/Back-end/strive-homework-m6-w3-p2/strive-homework-m6-w3-p2/src/lib/auth/tools.js:28:5
+    at new Promise (<anonymous>)
+    at verifyJWTToken (file:///C:/Users/erliz/OneDrive/Desktop/Homework/Back-end/strive-homework-m6-w3-p2/strive-homework-m6-w3-p2/src/lib/auth/tools.js:27:1)
+    at JWTAuthMiddleware (file:///C:/Users/erliz/OneDrive/Desktop/Homework/Back-end/strive-homework-m6-w3-p2/strive-homework-m6-w3-p2/src/lib/auth/token.js:23:31)
+    at Layer.handle [as handle_request] (C:\Users\erliz\OneDrive\Desktop\Homework\Back-end\strive-homework-m6-w3-p2\strive-homework-m6-w3-p2\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\erliz\OneDrive\Desktop\Homework\Back-end\strive-homework-m6-w3-p2\strive-homework-m6-w3-p2\node_modules\express\lib\router\route.js:144:13)
+    at Route.dispatch (C:\Users\erliz\OneDrive\Desktop\Homework\Back-end\strive-homework-m6-w3-p2\strive-homework-m6-w3-p2\node_modules\express\lib\router\route.js:114:3)        
+    at Layer.handle [as handle_request] (C:\Users\erliz\OneDrive\Desktop\Homework\Back-end\strive-homework-m6-w3-p2\strive-homework-m6-w3-p2\node_modules\express\lib\router\layer.js:95:5)
+    at C:\Users\erliz\OneDrive\Desktop\Homework\Back-end\strive-homework-m6-w3-p2\strive-homework-m6-w3-p2\node_modules\express\lib\router\index.js:284:15
+
+at POSTMAN:
+
+{
+    "message": "Token is not valid"
+}
+-------------------------------------------------------------------------------------

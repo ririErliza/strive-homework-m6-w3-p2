@@ -16,6 +16,7 @@ const authorsSchema = new Schema(
     dateOfBirth: { type: String, required: true },
     avatar: {type: String, required: false},
     password: { type: String, required: true },
+    role: {type: String, required: true, default:"User", enum:["User", "Admin"]},
   },
   {
     timestamps: true, // automatically add createdAt and updatedAt fields
