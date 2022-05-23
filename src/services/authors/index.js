@@ -104,7 +104,7 @@ authorsRouter.get("/me", JWTAuthMiddleware, async (req, res, next) => {
     }
   })
   
-authorsRouter.put("/me/:id", JWTAuthMiddleware, async (req, res, next) => {
+authorsRouter.put("/me", JWTAuthMiddleware, async (req, res, next) => {
     try {
         const updatedAuthorMe = await authorsModel.findByIdAndUpdate(
             req.author._id, // WHO
@@ -122,7 +122,7 @@ authorsRouter.put("/me/:id", JWTAuthMiddleware, async (req, res, next) => {
    
 })
 
-authorsRouter.delete("me/:id",JWTAuthMiddleware, async (req,res)=>{
+authorsRouter.delete("me",JWTAuthMiddleware, async (req,res)=>{
     try {
         const deletedAuthorMe = await authorsModel.findByIdAndDelete(req.author._id)
         if(deletedAuthorMe){
