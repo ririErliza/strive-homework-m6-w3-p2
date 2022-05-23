@@ -11,6 +11,7 @@ import q2m from "query-to-mongo";
 import { cloudinaryUploader } from "../../lib/cloudinary.js";
 import {generateJWTToken} from "../../lib/auth/tools.js";
 import { JWTAuthMiddleware } from "../../lib/auth/token.js";
+import { adminOnlyMiddleware } from "../../lib/auth/admin.js";
 
 
 
@@ -62,7 +63,7 @@ authorsRouter.post("/login", async (req,res,next)=>{
     })
 
 //2.
-authorsRouter.get("/", async (req,res)=>{
+authorsRouter.get("/",JWTAuthMiddleware, adminOnlyMiddleware, async (req,res)=>{
     try {
         console.log("REQ.QUERY --> ", req.query)
         console.log("MONGO QUERY --> ", q2m(req.query))
@@ -103,12 +104,42 @@ authorsRouter.get("/me", JWTAuthMiddleware, async (req, res, next) => {
     }
   })
   
-authorsRouter.put("/me", JWTAuthMiddleware, async (req, res, next) => {})
+authorsRouter.put("/me/:id", JWTAuthMiddleware, async (req, res, next) => {
+    try {
+        const updatedAuthorMe = await authorsModel.findByIdAndUpdate(
+            req.author._id, // WHO
+            req.body, // HOW
+            { new: true } // OPTIONS (if you want to obtain the updated Author you should specify new: true)
+          )
+        if(updatedAuthorMe){  
+            res.send(updatedAuthorMe)
+        }else{
+            next(createError(404, `Sorry, Cannot find Author with id ${req.author._id}!`)) 
+    }
+    } catch (error) {
+        next(error)
+    }
+   
+})
+
+authorsRouter.delete("me/:id",JWTAuthMiddleware, async (req,res)=>{
+    try {
+        const deletedAuthorMe = await authorsModel.findByIdAndDelete(req.author._id)
+        if(deletedAuthorMe){
+        res.status(204).send()
+        }else{
+        next(createError(404, `Sorry, Cannot find Author with id ${req.author._id}!`)) 
+        }
+    } catch (error) {
+        next(error)
+    }
+    
+})
 
 //---------------------- --------------- ----------------------------------
 
 //3.
-authorsRouter.get("/:id", async (req,res)=>{
+authorsRouter.get("/:id",JWTAuthMiddleware, adminOnlyMiddleware, async (req,res)=>{
     try {
         const Author = await authorsModel.findById(req.params.id)
         if(Author){
@@ -123,7 +154,7 @@ authorsRouter.get("/:id", async (req,res)=>{
 })
 
 //4.
-authorsRouter.put("/:id", async (req,res)=>{
+authorsRouter.put("/:id",JWTAuthMiddleware, adminOnlyMiddleware, async (req,res)=>{
     try {
         const updatedAuthor = await authorsModel.findByIdAndUpdate(
             req.params.id, // WHO
@@ -142,7 +173,7 @@ authorsRouter.put("/:id", async (req,res)=>{
 })
 
 //5.
-authorsRouter.delete("/:id", async (req,res)=>{
+authorsRouter.delete("/:id",JWTAuthMiddleware, adminOnlyMiddleware, async (req,res)=>{
     try {
         const deletedAuthor = await authorsModel.findByIdAndDelete(req.params.id)
         if(deletedAuthor){
