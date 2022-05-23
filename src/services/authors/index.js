@@ -9,6 +9,7 @@ import authorsModel from "./model.js";
 import createError from "http-errors";
 import q2m from "query-to-mongo"
 import { cloudinaryUploader } from "../../lib/cloudinary.js";
+import {generateJWTToken} from "../../lib/auth/tools.js"
 
 
 
@@ -43,9 +44,10 @@ authorsRouter.post("/login", async (req,res,next)=>{
 
        //3. if credentials are FINE, we will generate a TOKEN (if not, error 401)
        if (author) {
-
+            //generate token
+            const token = await generateJWTToken({_id:author._id})
            //4. TOKEN is send as a RESPONSE
-           res.send({message:"Credentials are OK"})
+           res.send({accessToken:token, message : "Credentials are OK"})
        } else {
          next(createError(401, "Oops! Credentials are not OK"))  
        }

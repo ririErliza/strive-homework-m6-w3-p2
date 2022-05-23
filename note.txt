@@ -151,3 +151,64 @@ REQUEST BODY:  {
 }
 
 -------------------------------------------------------------------------------------
+
+//here, we want to generate a token and verify it (basically this is the process)
+jwt.sign(payload, process.env.JWT_SECRET,{expiresIn:"1 week"}, (err, token) =>{})  //template GENERATE token
+
+jwt.verify(token, process.env.JWT_SECRET,{expiresIn:"1 week"}, (err, payload) =>{}) //template VERIFY token
+
+but wee need to convert functions above to promise function , because token generation can take sometimes
+
+-------------------------------------------------------------------------------------
+
+error while testing GENERATE TOKEN at POSTMAN
+
+//1 cause
+previously:
+export const generateJWTToken = payload =>
+new Promise ((resolve, reject)=>
+jwt.sign(payload, process.env.JWT_SECRET,{expiresIn:"1 week"}, (err, payload) =>{
+    if(err) reject(err)
+    else resolve(token)
+})
+)
+
+what happened : postman not giving TOKEN back as response
+
+solved:
+export const generateJWTToken = payload =>
+new Promise ((resolve, reject)=>
+jwt.sign(payload, process.env.JWT_SECRET,{expiresIn:"1 week"}, (err, token) =>{
+    if(err) reject(err)
+    else resolve(token)
+})
+)
+
+it should be (err,token) not (err,payload) because we are still in the process of generating token
+remember : //Input: payload, output: promise that resolve into a token
+
+//2 cause
+Token not generated because of double data saved in DB
+
+this user is saved 2x in DB
+{
+    "name": "Ailee",
+    "surname": "Kim",
+    "email": "kimmeeAA@yahoo.com",
+    "dateOfBirth": "1995-7-10",
+    "_id": "628b509a1217816e222ab5ef",
+    "createdAt": "2022-05-23T09:15:06.438Z",
+    "updatedAt": "2022-05-23T09:15:06.438Z"
+}
+
+cant get token after trying to log in:
+http://localhost:3002/authors/login
+
+{
+"email": "kimmeeAA@yahoo.com",
+"password": "1234"     
+}
+
+solved: delete one of the double data in Mongo Compass
+-------------------------------------------------------------------------------------
+
