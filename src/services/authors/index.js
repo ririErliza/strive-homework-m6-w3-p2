@@ -92,6 +92,21 @@ authorsRouter.get("/", async (req,res)=>{
     
 })
 
+//----------------------  ME Endpoints ----------------------------------
+
+authorsRouter.get("/me", JWTAuthMiddleware, async (req, res, next) => {
+    try {
+      const currentLoggedInAuthor = await authorsModel.findById(req.author._id)
+      res.send({ author: currentLoggedInAuthor })
+    } catch (error) {
+      next(error)
+    }
+  })
+  
+authorsRouter.put("/me", JWTAuthMiddleware, async (req, res, next) => {})
+
+//---------------------- --------------- ----------------------------------
+
 //3.
 authorsRouter.get("/:id", async (req,res)=>{
     try {
