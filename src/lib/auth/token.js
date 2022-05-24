@@ -17,10 +17,12 @@ if(!req.headers.authorization){
 }else{
     try {
         //2
-        const token = req.headers.authorization.replace("Bearer", "")
+        const token = req.headers.authorization.replace("Bearer ", "")
+        console.log("token is:", token)
 
         //3
         const payload = await verifyJWTToken(token)
+        console.log(payload)
 
         //4
        req.author={

@@ -63,7 +63,7 @@ authorsRouter.post("/login", async (req,res,next)=>{
     })
 
 //2.
-authorsRouter.get("/",JWTAuthMiddleware, adminOnlyMiddleware, async (req,res)=>{
+authorsRouter.get("/",JWTAuthMiddleware, async (req,res)=>{
     try {
         console.log("REQ.QUERY --> ", req.query)
         console.log("MONGO QUERY --> ", q2m(req.query))
