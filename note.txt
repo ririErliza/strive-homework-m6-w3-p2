@@ -286,4 +286,94 @@ at POSTMAN:
 {
     "message": "Token is not valid"
 }
+
+problem found,
+
+before:
+const token = req.headers.authorization.replace("Bearer", "")
+
+after:
+const token = req.headers.authorization.replace("Bearer ", "") 
+//solved. DONT forget to put space after Bearer
+
+-------------------------------------------------------------------------------------
+
+error happened when testing with postman.
+after applying admin middleware on endpoints, 
+at postman ->  log in as "Admin",
+but still getting response "Only Admin is allowed"
+
+problem found: forgot to type author.role when generating token
+
+before:
+
+authorsRouter.post("/login", async (req,res,next)=>{
+    try {
+       //1. extraxt credentials from req.body
+
+       const {email, password}= req.body
+
+
+       //2. verify them using bcrypt.compare for the password
+
+       const author = await authorsModel.checkCredentials(email, password)
+
+       //3. if credentials are FINE, we will generate a TOKEN (if not, error 401)
+       if (author) {
+
+
+            //generate token
+            const token = await generateJWTToken({_id:author._id}) //here is the problem
+
+
+
+           //4. TOKEN is send as a RESPONSE
+           res.send({accessToken:token, message : "Credentials are OK"})
+       } else {
+         next(createError(401, "Oops! Credentials are not OK"))  
+       }
+       
+     
+    } catch (error) {
+        next(error)
+    }
+       
+    })
+
+    after:
+    authorsRouter.post("/login", async (req,res,next)=>{
+    try {
+       //1. extraxt credentials from req.body
+
+       const {email, password}= req.body
+
+
+       //2. verify them using bcrypt.compare for the password
+
+       const author = await authorsModel.checkCredentials(email, password)
+
+       //3. if credentials are FINE, we will generate a TOKEN (if not, error 401)
+       if (author) {
+
+
+            //generate token
+            const token = await generateJWTToken({_id:author._id, role:author.role}) //here, solved
+
+
+
+
+           //4. TOKEN is send as a RESPONSE
+           res.send({accessToken:token, message : "Credentials are OK"})
+       } else {
+         next(createError(401, "Oops! Credentials are not OK"))  
+       }
+       
+     
+    } catch (error) {
+        next(error)
+    }
+       
+    })
+
+
 -------------------------------------------------------------------------------------

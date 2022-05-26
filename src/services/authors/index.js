@@ -48,7 +48,7 @@ authorsRouter.post("/login", async (req,res,next)=>{
        //3. if credentials are FINE, we will generate a TOKEN (if not, error 401)
        if (author) {
             //generate token
-            const token = await generateJWTToken({_id:author._id})
+            const token = await generateJWTToken({_id:author._id, role:author.role})
            //4. TOKEN is send as a RESPONSE
            res.send({accessToken:token, message : "Credentials are OK"})
        } else {
@@ -63,7 +63,7 @@ authorsRouter.post("/login", async (req,res,next)=>{
     })
 
 //2.
-authorsRouter.get("/",JWTAuthMiddleware, async (req,res)=>{
+authorsRouter.get("/",JWTAuthMiddleware,adminOnlyMiddleware, async (req,res)=>{
     try {
         console.log("REQ.QUERY --> ", req.query)
         console.log("MONGO QUERY --> ", q2m(req.query))
